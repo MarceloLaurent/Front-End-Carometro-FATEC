@@ -16,7 +16,7 @@ import {
   CriarText,
 } from "./styles";
 
-const Login = () => {
+const AdmLogin = () => {
   const navigate = useNavigate();
 
   const {
@@ -30,18 +30,18 @@ const Login = () => {
 
   const onSubmit = async (formData) => { 
     try {
-      const { data } = await api.get(`/alunos`);
+      const { data } = await api.get(`/funcionarios`);
 
       for (let i = 0; i < data.length; i++) {
-        if (data[i].cpf.toString() === formData.cpf && data[i].senha.toString() === formData.senha) {
-          console.log("Usuário encontrado:", data[i]);
-          navigate(`/logado/${data[i].idAluno}`);
-          return "Usuário autenticado";  // Retorna status de sucesso
+        if (data[i].nome === formData.nome && data[i].codigo === formData.codigo) {
+          console.log("Funcionário encontrado:", data[i]);
+          navigate(`/secretaria/${data[i].idFunc}/alunos`);
+          return "Funcionário autenticado";  // Retorna status de sucesso
         }
       }
 
-      alert("Usuário ou senha inválido");
-      return "Usuário não encontrado";  // Retorna status de falha de autenticação
+      alert("nome ou código inválido");
+      return "Funcionário não encontrado";  // Retorna status de falha de autenticação
     } catch (e) {
       console.error("Erro ao tentar fazer login:", e);
 
@@ -69,22 +69,22 @@ const Login = () => {
       <Container>
         <Wrapper>
           <form onSubmit={handleSubmit(onSubmit)}>
-            <Input
-              type="number"
-              placeholder="CPF: apenas números"
+          <Input
+              type="text"
+              placeholder="Nome"
               leftIcon={<MdPermIdentity />}
-              name="cpf"
+              name="nome"
               control={control}
             />
-            {errors.cpf && <span>CPF é obrigatório</span>}
+            {errors.nome && <span>Nome é obrigatório</span>}
             <Input
               type="password"
               placeholder="Senha"
               leftIcon={<MdLock />}
-              name="senha"
+              name="codigo"
               control={control}
             />
-            {errors.senha && <span>Senha é obrigatória</span>}
+            {errors.codigo && <span>Senha é obrigatória</span>}
             <Button title="Entrar" variant="secondary" type="submit" />
           </form>
         </Wrapper>
@@ -99,4 +99,4 @@ const Login = () => {
   );
 };
 
-export { Login };
+export { AdmLogin };

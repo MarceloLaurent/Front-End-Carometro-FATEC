@@ -31,33 +31,26 @@ export const Menu = styled.a`
     font-family: 'Open Sans';
     font-style: normal;
     font-weight: 700;
-    font-size: 30px;
-    text-decoration: none;
+    font-size: 24px;
     line-height: 25px;
     color: #FFFFFF;
     margin-right: 12px;
-    cursor: pointer;
+    text-decoration: none;
 `
 
-export const RightMenu = styled.a`
+export const MenuRight = styled.a`
     font-family: 'Open Sans';
     font-style: normal;
-    font-weight: 700;
-    font-size: 20px;
-    text-decoration: none;
+    font-size: 16px;
     line-height: 25px;
     color: #FFFFFF;
-    margin-left: 10px;
-    cursor: pointer;
+    margin-right: 12px;
+    text-decoration: none;
 `
 
-export const Logo = styled.p`
-    font-family: 'Roboto';
-    font-style: normal;
-    font-weight: 700;
-    font-size: 48px;
-    line-height: 25px;
-    color: #43555F;
-    margin-right: -48px;
-    margin-botton: 60px;
+export const UserPicture = styled.img`
+    width: 40px;
+    height: 40px;
+    border-radius: 22px;
+    border: 1px solid #FFFFFF;
 `

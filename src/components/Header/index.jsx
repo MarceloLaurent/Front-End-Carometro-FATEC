@@ -11,6 +11,7 @@ const Header = () => {
           <>
             <RightMenu href="/login">Entrar</RightMenu>
             <RightMenu href="/signup">Cadastrar</RightMenu>
+            <RightMenu href="/adm-login">Entrar como Administrador</RightMenu>
           </>
         </Row>
         <Row>

@@ -6,6 +6,9 @@ import { HomeLogado} from './pages/home-logado';
 import { Login } from './pages/login';
 import { SignUp } from "./pages/signup";
 import { Logado } from "./components/Logado";
+import { Update } from "./pages/update";
+import { AdmLogin } from "./pages/adm-login";
+import { HomeSecretaria } from "./pages/home-secretaria";
 
 function App() {
   return (
@@ -13,9 +16,12 @@ function App() {
       <GlobalStyle />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/logado" element={<HomeLogado />} />
+        <Route path="/logado/:id" element={<HomeLogado />} />
         <Route path="/logado/:id" element={<Logado />} />
+        <Route path="/secretaria/:id/:tipo" element={<HomeSecretaria />} />
+        <Route path="/update/:id" element={<Update />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/adm-login" element={<AdmLogin />} />
         <Route path="/signup" element={<SignUp/>} />
       </Routes>
     </Router>
