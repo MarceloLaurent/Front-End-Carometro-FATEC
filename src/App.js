@@ -9,6 +9,10 @@ import { Logado } from "./components/Logado";
 import { Update } from "./pages/update";
 import { AdmLogin } from "./pages/adm-login";
 import { HomeSecretaria } from "./pages/home-secretaria";
+import { AddCurso } from "./pages/add-curso";
+import { AddCoordenador } from "./pages/add-coordenador";
+import { AddTurma } from "./pages/add-turma";
+
 
 function App() {
   return (
@@ -23,6 +27,9 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/adm-login" element={<AdmLogin />} />
         <Route path="/signup" element={<SignUp/>} />
+        <Route path="/secretaria/:id/:tipo/add/cursos" element={<AddCurso/>} />
+        <Route path="/secretaria/:id/:tipo/add/coordenadores" element={<AddCoordenador/>} />
+        <Route path="/secretaria/:id/:tipo/add/turmas" element={<AddTurma/>} />
       </Routes>
     </Router>
   );

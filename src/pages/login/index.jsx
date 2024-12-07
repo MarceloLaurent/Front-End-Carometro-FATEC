@@ -35,7 +35,7 @@ const Login = () => {
       for (let i = 0; i < data.length; i++) {
         if (data[i].email === formData.email && data[i].senha.toString() === formData.senha) {
           console.log("Usuário encontrado:", data[i]);
-          navigate(`/logado/${data[i].idAluno}`);
+          navigate(`/logado/${data[i].id}`);
           return "Usuário autenticado";  // Retorna status de sucesso
         }
       }

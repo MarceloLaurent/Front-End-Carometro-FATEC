@@ -1,27 +1,22 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate  } from "react-router-dom";
 import { api } from "../../services/api"; // Certifique-se de que api está configurado corretamente
 import { Container } from "./styles";
 import { GenericTable } from "../../components/GenericTable"; // Componente da tabela genérica
 import { AdmLogado } from "../../components/Adm-Logado";
 
 const HomeSecretaria = () => {
-  const { tipo } = useParams(); // Captura o id e tipo da URL
+  const { tipo } = useParams(); // Captura o tipo da URL
   const [dados, setDados] = useState([]);
-  const [loading, setLoading] = useState(true); // Estado para controle de carregamento
+  const [loading, setLoading] = useState(true);
+
+  const navigate = useNavigate(); // Inicializa o hook de navegação
 
   useEffect(() => {
-    // Se não houver tipo, não faz requisição, apenas exibe a mensagem padrão
-    if (!tipo) {
-      setLoading(false); // Não faz a requisição e exibe a mensagem padrão
-      return;
-    }
-
     const fetchData = async () => {
       try {
         let response;
 
-        // Verifica o tipo e faz a requisição apropriada
         switch (tipo) {
           case "alunos":
             response = await api.get("/alunos");
@@ -37,33 +32,57 @@ const HomeSecretaria = () => {
             break;
           default:
             console.log("Tipo não reconhecido");
-            setLoading(false); // Caso o tipo seja desconhecido, também termina o carregamento
+            setLoading(false);
             return;
         }
 
-        setDados(response.data); // Armazenando os dados recebidos da API
-        setLoading(false); // Define o estado de carregamento como falso
+        const dadosFormatados = response.data.map((item) => ({
+          ...item,
+          id: item.id || item.codigo || item._id,
+        }));
+
+        setDados(dadosFormatados);
+        setLoading(false);
       } catch (error) {
         console.error("Erro ao buscar dados:", error);
         alert("Não foi possível carregar os dados.");
-        setLoading(false); // Mesmo em caso de erro, o carregamento é desfeito
+        setLoading(false);
       }
     };
 
-    fetchData(); // Chama a função para buscar os dados apenas se o tipo for válido
+    if (tipo) fetchData();
+  }, [tipo]);
 
-  }, [tipo]); // A dependência é o "tipo", garantindo que a requisição seja feita toda vez que "tipo" mudar
-
-  // Função para formatar a data no formato dd/mm/aaaa
-  const formatarData = (data) => {
-    const dataObj = new Date(data);
-    const dia = String(dataObj.getDate()).padStart(2, "0");
-    const mes = String(dataObj.getMonth() + 1).padStart(2, "0");
-    const ano = dataObj.getFullYear();
-    return `${dia}/${mes}/${ano}`;
+  const handleExcluir = async (id) => {
+    try {
+      await api.delete(`/${tipo}/${id}`);
+      setDados((prevDados) => prevDados.filter((item) => item.id !== id));
+      window.location.reload();
+    } catch (error) {
+      window.location.reload();
+      console.error("Erro ao excluir o item:", error);
+    }
   };
 
-  // Função para definir as colunas com base no tipo
+  const handleAdicionar = () => {
+    // Redireciona para a página de adição com tipo dinâmico
+    navigate(`/secretaria/1/${tipo}/add/${tipo}`);
+  };
+
+  const formatarData = (data) => {
+    if (!data) return "";
+    try {
+      const dataObj = new Date(data);
+      const dia = String(dataObj.getDate()).padStart(2, "0");
+      const mes = String(dataObj.getMonth() + 1).padStart(2, "0");
+      const ano = dataObj.getFullYear();
+      return `${dia}/${mes}/${ano}`;
+    } catch (error) {
+      console.error("Erro ao formatar data:", data, error);
+      return "";
+    }
+  };
+
   const definirColunas = (tipo) => {
     switch (tipo) {
       case "alunos":
@@ -93,39 +112,48 @@ const HomeSecretaria = () => {
 
   return (
     <>
-      <AdmLogado /> {/* AdmLogado sempre exibido */}
+      <AdmLogado />
       <Container>
         <h2>
-          {/* Título dinâmico ou mensagem padrão */}
           {tipo
             ? `Gerenciar ${tipo.charAt(0).toUpperCase() + tipo.slice(1)}`
             : "Selecione os dados que deseja gerenciar"}
         </h2>
 
-        {/* Exibição da tabela ou mensagem */}
         {loading ? (
           <p>Carregando dados...</p>
         ) : tipo ? (
           dados.length > 0 ? (
-            <GenericTable
-              dados={dados.map((item) => ({
-                ...item,
-                // Formata a data de nascimento antes de exibir, se aplicável
-                dataNascimento: item.dataNascimento
-                  ? formatarData(item.dataNascimento)
-                  : "",
-              }))}
-              colunas={definirColunas(tipo)} // Passa as colunas para o GenericTable com base no tipo
-              tipo={tipo} // Passa o tipo para o GenericTable
-              onExcluir={(id) =>
-                setDados(dados.filter((item) => item.id !== id)) // Remove o item excluído da lista
-              }
-            />
+            <>
+              <GenericTable
+                dados={dados.map((item) => ({
+                  ...item,
+                  dataNascimento: item.dataNascimento
+                    ? formatarData(item.dataNascimento)
+                    : "",
+                }))}
+                colunas={definirColunas(tipo)}
+                tipo={tipo}
+                onExcluir={handleExcluir}
+              />
+              <div className="button-container">
+                <button onClick={handleAdicionar}>
+                  {tipo
+                    ? `Adicionar ${tipo.charAt(0).toUpperCase() + tipo.slice(1)}`
+                    : "Selecione os dados que deseja gerenciar"}
+                </button>
+              </div>
+            </>
           ) : (
-            <p>Não há dados para exibir.</p> // Mensagem caso não haja dados
+            <>
+              <p>Não há dados para exibir.</p>
+              <div className="button-container">
+                <button onClick={handleAdicionar}>Adicionar Item</button>
+              </div>
+            </>
           )
         ) : (
-          <p>Selecione os dados que deseja gerenciar.</p> // Exibe a mensagem padrão caso tipo seja indefinido
+          <p>Selecione os dados que deseja gerenciar.</p>
         )}
       </Container>
     </>

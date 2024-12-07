@@ -173,7 +173,7 @@ const SignUp = () => {
             </Row>
             <ButtonContainer>
               <Button title="Confirmar" variant="primary" type="submit" />
-              <Button title="Cancelar" variant="secondary" type="submit" />
+              <Button title="Cancelar" variant="secondary" onClick={() => navigate("/")} />
             </ButtonContainer>
           </form>
         </Wrapper>

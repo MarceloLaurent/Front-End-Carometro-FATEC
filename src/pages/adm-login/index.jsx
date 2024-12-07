@@ -35,7 +35,7 @@ const AdmLogin = () => {
       for (let i = 0; i < data.length; i++) {
         if (data[i].nome === formData.nome && data[i].codigo === formData.codigo) {
           console.log("Funcionário encontrado:", data[i]);
-          navigate(`/secretaria/${data[i].idFunc}/alunos`);
+          navigate(`/secretaria/${data[i].id}/alunos`);
           return "Funcionário autenticado";  // Retorna status de sucesso
         }
       }
